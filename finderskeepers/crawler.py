@@ -3,22 +3,28 @@
 # ##########################################################################################
 
 import urllib.request
-
+import logger
 
 # ##########################################################################################
 #                                        GLOBALS
 # ##########################################################################################
 
+# ############################################
+# Configuration specific params
 # The seed url to start crawling from
 crawler_seed = 'https://www.udacity.com/cs101x/index.html'
+
+# Log level for the project
+crawler_log_level = 7
+
+# ############################################
+
 
 # Some Typical Macros in form of global variables
 CRAWLER_ERROR = -1
 CRAWLER_SUCCESS = 1
-
 CRAWLER_FOUND = CRAWLER_SUCCESS
 CRAWLER_NOT_FOUND = CRAWLER_ERROR
-
 CRAWLER_TRUE = CRAWLER_SUCCESS
 CRAWLER_FALSE = CRAWLER_ERROR
 
@@ -37,7 +43,7 @@ crawler_crawled = []
 # #############################################
 def crawler_get_html_res(crawler_input_page):
 
-    print("crawler_get_html_res: Getting links from url " + crawler_input_page)
+    # logger.GENERIC_PYTHON_LOGGER_LOG (logger.LOGGER_LOG_LEVEL_TRACE, "crawler_get_html_res: Getting links from url " + crawler_input_page)
     with urllib.request.urlopen(crawler_input_page, None, 3) as response:
         crawler_local_read_html = response.read()
         crawler_update_url_index_db(crawler_to_crawl, 'delete', crawler_input_page)
@@ -145,6 +151,7 @@ def crawler_check_in_crawled_url_index_db(crawler_retrieved_url_in):
 #                                        SOURCE ENTRY POINT
 # ##########################################################################################
 
+# crawler_logger = logger.generic_python_logger(crawler_log_level)
 while(len(crawler_to_crawl) > 0):
     crawler_global_local_temp = crawler_get_html_res(crawler_to_crawl[0])
     crawler_parse_html_res(str(crawler_global_local_temp))
